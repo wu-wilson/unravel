@@ -1,14 +1,11 @@
-import React from 'react';
 import {Text} from 'ink';
 
-type Props = {
-	name: string | undefined;
-};
-
-export default function App({name = 'Stranger'}: Props) {
+const App = () => {
 	return (
 		<Text>
-			Hello, <Text color="green">{name}</Text>
+			Hello <Text color="green">Stranger</Text>
 		</Text>
 	);
-}
+};
+
+export default App;
