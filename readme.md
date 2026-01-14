@@ -8,7 +8,7 @@ Coming Soon!
 
 ## 🚀 Stack
 
-- React-Ink (TS)
+- [React-Ink](https://github.com/vadimdemedes/ink) (TS)
 
 ## 🛠️ Local Setup
 
