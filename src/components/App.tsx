@@ -1,10 +1,15 @@
-import { Text } from "ink";
+import { Box, Text } from "ink";
 
 const App = () => {
   return (
-    <Text>
-      Hello <Text color="green">Stranger</Text>
-    </Text>
+    <Box
+      flexDirection="column"
+      padding={1}
+      borderStyle="single"
+      borderColor="gray"
+    >
+      <Text color="green">UNRAVEL</Text>
+    </Box>
   );
 };
 
