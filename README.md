@@ -1,6 +1,6 @@
 ## ⚡ Overview
 
-**Unravel** is an interactive CLI tool that untangles your project's dependencies—see bundle sizes and track imports.
+**Unravel** is an interactive CLI tool that untangles your project's dependencies, showing gzipped npm package sizes and tracking imports.
 
 ## 🎬 Video Demo
 
@@ -45,3 +45,9 @@ Run the `unravel` command in your project root:
 cd example-repo
 unravel
 ```
+
+## ⚠️ Limitations
+
+- Sizes reflect gzipped npm tarballs, not the final bundle.
+- Only includes published package contents.
+- Doesn’t show transitive dependency impact or runtime performance.
