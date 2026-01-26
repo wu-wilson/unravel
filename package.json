@@ -15,12 +15,12 @@
     "dist"
   ],
   "dependencies": {
-    "ink": "^4.1.0",
-    "react": "^18.2.0"
+    "ink": "^6.6.0",
+    "react": "^19.2.4"
   },
   "devDependencies": {
     "@types/node": "^25.0.10",
-    "@types/react": "^18.0.32",
+    "@types/react": "^19.2.9",
     "chalk": "^5.2.0",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
