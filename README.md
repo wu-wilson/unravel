@@ -24,6 +24,7 @@ cd unravel
 ```bash
 npm install
 npm run build
+chmod +x dist/cli.js
 npm link
 ```
 
