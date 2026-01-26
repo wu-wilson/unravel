@@ -39,7 +39,7 @@ your-project/
     └── ...
 ```
 
-To analyze a project, run the following commands:
+Run the `unravel` command in your project root:
 
 ```bash
 cd example-repo
