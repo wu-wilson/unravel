@@ -46,7 +46,6 @@ function App() {
       borderColor="gray"
     >
       <Header />
-
       {loading ? (
         <Text color="yellow">Loading dependency info...</Text>
       ) : detailIndex === null ? (
