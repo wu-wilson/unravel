@@ -38,6 +38,8 @@ your-project/
     └── ...
 ```
 
+To analyze a project, run the following commands:
+
 ```bash
 cd example-repo
 unravel
