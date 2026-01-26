@@ -35,7 +35,7 @@ async function getIgnorePatterns(packagePath: string): Promise<Set<string>> {
           patterns.add(trimmed);
         }
       }
-      break; // If .npmignore exists, don't read .gitignore
+      break;
     } catch {
       // File doesn't exist, continue
     }
@@ -69,17 +69,13 @@ async function getPackageFiles(
  */
 function shouldIgnore(relativePath: string, patterns: Set<string>): boolean {
   for (const pattern of patterns) {
-    // Exact match
     if (relativePath === pattern) return true;
 
-    // Directory match
     if (pattern.endsWith("/") && relativePath.startsWith(pattern)) return true;
 
-    // Wildcard extension match (e.g., *.log)
     if (pattern.startsWith("*.") && relativePath.endsWith(pattern.slice(1)))
       return true;
 
-    // Simple glob match
     if (pattern.includes("*")) {
       const regex = new RegExp("^" + pattern.replace(/\*/g, ".*") + "$");
       if (regex.test(relativePath)) return true;
@@ -95,9 +91,8 @@ function isIncluded(
   relativePath: string,
   filesSet: Set<string> | null,
 ): boolean {
-  if (!filesSet) return true; // No files field means include everything
+  if (!filesSet) return true;
 
-  // Always include package.json, README, LICENSE, etc.
   const alwaysInclude = [
     "package.json",
     "readme.md",
@@ -110,7 +105,6 @@ function isIncluded(
     return true;
   }
 
-  // Check if path matches any pattern in files field
   for (const pattern of filesSet) {
     const normalized = pattern.replace(/\\/g, "/");
     if (
@@ -162,7 +156,6 @@ async function calculatePackageSizes(
 ): Promise<{ size: number; gzip: number; fileCount: number }> {
   const files = await getFilesToInclude(packagePath);
 
-  // Sort for reproducibility (npm does this)
   files.sort();
 
   const tempTarPath = join(
@@ -171,7 +164,6 @@ async function calculatePackageSizes(
   );
 
   try {
-    // Create tarball exactly like npm pack does
     await tar.create(
       {
         cwd: packagePath,
@@ -179,7 +171,6 @@ async function calculatePackageSizes(
         portable: true,
         noMtime: true,
         gzip: false,
-        // Add package prefix like npm does
         prefix: "package/",
       },
       files,
@@ -187,10 +178,8 @@ async function calculatePackageSizes(
 
     const tarBuffer = await readFile(tempTarPath);
 
-    // Gzip with default settings (level 6, matches npm)
     const gzipped = gzipSync(tarBuffer);
 
-    // Calculate uncompressed size from actual file contents
     let totalSize = 0;
     for (const file of files) {
       const stats = await stat(join(packagePath, file));
@@ -203,7 +192,6 @@ async function calculatePackageSizes(
       fileCount: files.length,
     };
   } finally {
-    // Clean up temporary file
     try {
       await unlink(tempTarPath);
     } catch {
