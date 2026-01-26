@@ -29,6 +29,15 @@ npm link
 
 #### 3. Analyze a project
 
+This tool expects your project to have the following structure:
+
+```
+your-project/
+├── package.json
+└── src/
+    └── ...
+```
+
 ```bash
 cd example-repo
 unravel

@@ -1,9 +1,9 @@
 import { Box, Text, useApp, useInput } from "ink";
-import { useDependencyData } from "../hooks/useDependencyData.js";
+import { useDependencyData } from "./hooks/useDependencyData.js";
 import { useState } from "react";
-import Header from "./Header.js";
-import PackagesView from "./views/PackagesView.js";
-import DetailView from "./views/DetailView.js";
+import Header from "./components/layout/Header.js";
+import PackagesView from "./components/views/PackagesView.js";
+import DetailView from "./components/views/DetailView.js";
 
 function App() {
   const { exit } = useApp();
