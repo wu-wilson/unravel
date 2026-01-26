@@ -25,6 +25,15 @@ function App() {
       setSelected(0);
       return;
     }
+
+    if (key.upArrow) {
+      setSelected((s) => Math.max(0, s - 1));
+    }
+
+    if (key.downArrow) {
+      const maxIdx = mode === "packages" ? data.length - 1 : 0;
+      setSelected((s) => Math.min(maxIdx, s + 1));
+    }
   });
 
   return (

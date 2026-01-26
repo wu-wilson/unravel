@@ -7,10 +7,7 @@ export async function getPackages(): Promise<Record<string, string>> {
     const content = await readFile(path, "utf-8");
     const parsed = JSON.parse(content);
 
-    return {
-      ...parsed.dependencies,
-      ...parsed.devDependencies,
-    };
+    return parsed.dependencies;
   } catch (error) {
     return {};
   }
