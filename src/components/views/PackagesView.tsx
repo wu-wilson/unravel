@@ -47,9 +47,7 @@ function PackagesView({ data, selected }: PackagesViewProps) {
             </Text>
             <Text>
               {"   "}
-              {pkg.loading ? (
-                <Text dimColor>⏳ Loading size...</Text>
-              ) : pkg.error ? (
+              {pkg.error ? (
                 <Text color="red">✗ {pkg.error}</Text>
               ) : (
                 <>

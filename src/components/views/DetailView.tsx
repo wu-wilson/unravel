@@ -17,12 +17,6 @@ function DetailView({ data }: { data: DependencyData }) {
       </Box>
       <Box flexDirection="column">
         <Text>
-          Size (minified):{" "}
-          <Text bold color="yellow">
-            {formatSize(pkg.size || 0)}
-          </Text>
-        </Text>
-        <Text>
           Size (gzipped):{" "}
           <Text bold color="green">
             {formatSize(pkg.gzip || 0)}

@@ -53,7 +53,6 @@ export async function getPackageSize(
       name,
       version,
       gzip,
-      loading: false,
     };
 
     CACHE.set(key, info);
@@ -62,7 +61,6 @@ export async function getPackageSize(
     const info: PackageInfo = {
       name,
       version,
-      loading: false,
       error: error instanceof Error ? error.message : "Failed to fetch package",
     };
 

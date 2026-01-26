@@ -1,9 +1,7 @@
 export type PackageInfo = {
   name: string;
   version: string;
-  size?: number;
   gzip?: number;
-  loading: boolean;
   error?: string;
 };
 
