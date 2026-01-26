@@ -31,7 +31,12 @@ function PackagesView({ data, selected }: PackagesViewProps) {
           "█".repeat(barWidth) + "░".repeat(Math.max(0, 40 - barWidth));
 
         return (
-          <Box key={pkg.name} flexDirection="column" marginBottom={1}>
+          <Box
+            key={pkg.name}
+            flexDirection="column"
+            marginBottom={1}
+            marginTop={1}
+          >
             <Text
               backgroundColor={isSelected ? "blue" : undefined}
               color={isSelected ? "white" : undefined}

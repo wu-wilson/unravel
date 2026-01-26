@@ -17,6 +17,13 @@ function App() {
       return;
     }
 
+    if (detailIndex !== null) {
+      if (key.escape || input === "b" || input === "B") {
+        setDetailIndex(null);
+      }
+      return;
+    }
+
     if (key.upArrow) {
       setSelected((s) => Math.max(0, s - 1));
     }
@@ -30,10 +37,6 @@ function App() {
     }
   });
 
-  if (loading) {
-    return <Text color="yellow">⏳ Loading dependency info...</Text>;
-  }
-
   return (
     <Box
       flexDirection="column"
@@ -42,7 +45,10 @@ function App() {
       borderColor="gray"
     >
       <Header />
-      {detailIndex !== null ? (
+
+      {loading ? (
+        <Text color="yellow">⏳ Loading dependency info...</Text>
+      ) : detailIndex !== null ? (
         <DetailView data={data[detailIndex]} />
       ) : (
         <PackagesView data={data} selected={selected} />

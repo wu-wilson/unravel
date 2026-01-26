@@ -9,9 +9,7 @@ function Header() {
         </Text>
       </Box>
       <Box marginTop={1} flexDirection="column">
-        <Text dimColor>
-          Tab: Switch Mode | ↑↓: Navigate | Q: Quit | Enter: Select
-        </Text>
+        <Text dimColor>↑↓: Navigate | Q: Quit | Enter: Select</Text>
       </Box>
     </Box>
   );
