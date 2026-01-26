@@ -1,10 +1,48 @@
 import { PackageInfo } from "../types.js";
+import { readdir, readFile, stat } from "fs/promises";
+import { join, resolve } from "path";
+import { gzipSync } from "zlib";
 
 const CACHE = new Map<string, PackageInfo>();
 
+async function calculatePackageSizes(
+  packagePath: string,
+): Promise<{ size: number; gzip: number }> {
+  let totalSize = 0;
+  let totalGzipped = 0;
+
+  async function processDirectory(dir: string) {
+    const entries = await readdir(dir, { withFileTypes: true });
+
+    for (const entry of entries) {
+      const fullPath = join(dir, entry.name);
+
+      if (entry.isDirectory()) {
+        if (entry.name !== "node_modules") {
+          await processDirectory(fullPath);
+        }
+      } else if (entry.isFile()) {
+        try {
+          const stats = await stat(fullPath);
+          totalSize += stats.size;
+
+          const content = await readFile(fullPath);
+          const gzipped = gzipSync(content);
+          totalGzipped += gzipped.length;
+        } catch {
+          // Skip files that can't be read
+        }
+      }
+    }
+  }
+
+  await processDirectory(packagePath);
+  return { size: totalSize, gzip: totalGzipped };
+}
+
 export async function getPackageSize(
   name: string,
-  version: string
+  version: string,
 ): Promise<PackageInfo> {
   const key = `${name}@${version}`;
 
@@ -13,20 +51,17 @@ export async function getPackageSize(
   }
 
   try {
-    const url = `https://bundlephobia.com/api/size?package=${name}@${version}`;
-    const response = await fetch(url);
+    const packagePath = resolve(process.cwd(), "node_modules", name);
 
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
+    await stat(packagePath);
 
-    const data = await response.json();
+    const { size, gzip } = await calculatePackageSizes(packagePath);
 
     const info: PackageInfo = {
       name,
       version,
-      size: data.size,
-      gzip: data.gzip,
+      size,
+      gzip,
       loading: false,
     };
 
@@ -37,10 +72,16 @@ export async function getPackageSize(
       name,
       version,
       loading: false,
-      error: error instanceof Error ? error.message : "Unknown error",
+      error: "Package not installed",
     };
 
     CACHE.set(key, info);
     return info;
   }
+}
+
+export function formatSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes}B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)}KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)}MB`;
 }

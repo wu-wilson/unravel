@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { DependencyData, PackageInfo } from "../types.js";
+import { DependencyData } from "../types.js";
 import { getPackages } from "../utils/packages.js";
 import { getPackageSize } from "../utils/bundle.js";
 import { scanImports } from "../utils/scanner.js";
@@ -23,27 +23,29 @@ export function useDependencyData() {
     }));
 
     setData(initial);
+
+    await Promise.all(
+      entries.map(async ([name, version], i) => {
+        const cleanVersion = version.replace(/^[\^~]/, "");
+
+        const [packageInfo, imports] = await Promise.all([
+          getPackageSize(name, cleanVersion),
+          scanImports(name),
+        ]);
+
+        setData((prev) => {
+          const next = [...prev];
+          next[i] = {
+            ...next[i],
+            package: packageInfo,
+            imports,
+          };
+          return next;
+        });
+      }),
+    );
+
     setLoading(false);
-
-    for (let i = 0; i < entries.length; i++) {
-      const [name, version] = entries[i];
-      const cleanVersion = version.replace(/^[\^~]/, "");
-
-      const [packageInfo, imports] = await Promise.all([
-        getPackageSize(name, cleanVersion),
-        scanImports(name),
-      ]);
-
-      setData((prev) => {
-        const next = [...prev];
-        next[i] = {
-          ...next[i],
-          package: packageInfo,
-          imports,
-        };
-        return next;
-      });
-    }
   }
 
   useEffect(() => {
