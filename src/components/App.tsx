@@ -1,8 +1,11 @@
-import { Box, Text, useApp, useInput } from "ink";
+import { Box, useApp, useInput } from "ink";
 import { useDependencyData } from "../hooks/useDependencyData.js";
 import { useState } from "react";
 import { ViewMode } from "../types";
 import Header from "./Header.js";
+import PackagesView from "./views/PackagesView.js";
+import CircularView from "./views/CircularView.js";
+import DetailView from "./views/DetailView.js";
 
 function App() {
   const { exit } = useApp();
@@ -32,6 +35,17 @@ function App() {
       borderColor="gray"
     >
       <Header mode={mode} />
+      {detailIndex !== null ? (
+        <DetailView data={data[detailIndex]} />
+      ) : (
+        <>
+          {mode === "packages" ? (
+            <PackagesView data={data} selected={selected} loading={loading} />
+          ) : (
+            <CircularView selected={selected} />
+          )}
+        </>
+      )}
     </Box>
   );
 }
