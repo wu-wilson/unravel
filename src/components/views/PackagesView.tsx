@@ -1,6 +1,6 @@
 import { Box, Text } from "ink";
 import { DependencyData } from "../../types";
-import { formatSize } from "../../utils/format.js";
+import { formatSize } from "../../utils/formatting.js";
 
 type PackagesViewProps = {
   data: DependencyData[];

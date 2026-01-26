@@ -4,7 +4,7 @@ import { getDependencies } from "../utils/dependencies.js";
 import { getImports } from "../utils/imports.js";
 
 export function useDependencyData() {
-  const [data, setData] = useState<DependencyData[] | null>(null);
+  const [data, setData] = useState<DependencyData[]>([]);
   const [loading, setLoading] = useState(true);
 
   async function load() {

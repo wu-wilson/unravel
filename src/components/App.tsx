@@ -8,6 +8,7 @@ import DetailView from "./views/DetailView.js";
 function App() {
   const { exit } = useApp();
   const { data, loading } = useDependencyData();
+
   const [selected, setSelected] = useState(0);
   const [detailIndex, setDetailIndex] = useState<number | null>(null);
 
@@ -24,19 +25,15 @@ function App() {
       return;
     }
 
-    if (key.upArrow) {
-      if (detailIndex === null) {
-        setSelected((s) => Math.max(0, s - 1));
-      }
+    if (key.upArrow && detailIndex === null) {
+      setSelected((s) => Math.max(0, s - 1));
     }
 
-    if (key.downArrow) {
-      if (detailIndex === null) {
-        setSelected((s) => Math.min(data!.length - 1, s + 1));
-      }
+    if (key.downArrow && detailIndex === null) {
+      setSelected((s) => Math.min(data.length - 1, s + 1));
     }
 
-    if (key.return && data![selected]) {
+    if (key.return && data[selected]) {
       setDetailIndex(selected);
     }
   });
@@ -52,10 +49,10 @@ function App() {
 
       {loading ? (
         <Text color="yellow">Loading dependency info...</Text>
-      ) : detailIndex !== null ? (
-        <DetailView data={data![detailIndex]} />
+      ) : detailIndex === null ? (
+        <PackagesView data={data} selected={selected} />
       ) : (
-        <PackagesView data={data!} selected={selected} />
+        <DetailView data={data[detailIndex]} />
       )}
     </Box>
   );

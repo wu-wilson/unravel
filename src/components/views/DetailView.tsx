@@ -1,6 +1,6 @@
 import { Box, Text } from "ink";
 import { DependencyData } from "../../types";
-import { formatSize } from "../../utils/format.js";
+import { formatSize } from "../../utils/formatting.js";
 
 function DetailView({ data }: { data: DependencyData }) {
   const { dependency: dep, imports } = data;
