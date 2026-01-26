@@ -31,14 +31,7 @@ function App() {
   });
 
   if (loading) {
-    return (
-      <Box flexDirection="column" padding={1}>
-        <Header />
-        <Box marginTop={1}>
-          <Text color="yellow">⏳ Loading dependency info...</Text>
-        </Box>
-      </Box>
-    );
+    return <Text color="yellow">⏳ Loading dependency info...</Text>;
   }
 
   return (
