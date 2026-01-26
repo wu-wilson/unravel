@@ -13,27 +13,23 @@ function App() {
   const [detailIndex, setDetailIndex] = useState<number | null>(null);
 
   useInput((input, key) => {
-    if (input === "q" || input === "Q") {
+    if (input === "q") {
       exit();
       return;
     }
 
     if (detailIndex !== null) {
-      if (key.escape || input === "b" || input === "B") {
+      if (key.escape || input === "b") {
         setDetailIndex(null);
       }
       return;
     }
 
-    if (key.upArrow && detailIndex === null) {
+    if (key.upArrow) {
       setSelected((s) => Math.max(0, s - 1));
-    }
-
-    if (key.downArrow && detailIndex === null) {
+    } else if (key.downArrow) {
       setSelected((s) => Math.min(data.length - 1, s + 1));
-    }
-
-    if (key.return && data[selected]) {
+    } else if (key.return && data[selected]) {
       setDetailIndex(selected);
     }
   });

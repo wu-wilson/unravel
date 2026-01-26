@@ -9,7 +9,7 @@ function Header() {
         </Text>
       </Box>
       <Box marginTop={1} flexDirection="column">
-        <Text dimColor>↑↓: Navigate | Q: Quit | Enter: Select</Text>
+        <Text dimColor>↑↓: navigate | q: quit | enter: select</Text>
       </Box>
     </Box>
   );

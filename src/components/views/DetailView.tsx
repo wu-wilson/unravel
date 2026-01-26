@@ -50,7 +50,7 @@ function DetailView({ data }: { data: DependencyData }) {
         </Box>
       )}
       <Box marginTop={1} justifyContent="center">
-        <Text dimColor>Press B or ESC to go back</Text>
+        <Text dimColor>Press b or ESC to go back</Text>
       </Box>
     </Box>
   );
