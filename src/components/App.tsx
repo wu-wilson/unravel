@@ -47,7 +47,7 @@ function App() {
       <Header />
 
       {loading ? (
-        <Text color="yellow">⏳ Loading dependency info...</Text>
+        <Text color="yellow">Loading dependency info...</Text>
       ) : detailIndex !== null ? (
         <DetailView data={data[detailIndex]} />
       ) : (
