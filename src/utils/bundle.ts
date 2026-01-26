@@ -8,8 +8,8 @@ const CACHE = new Map<string, PackageInfo>();
 async function calculatePackageSizes(
   packagePath: string,
 ): Promise<{ size: number; gzip: number }> {
+  const allContent: Buffer[] = [];
   let totalSize = 0;
-  let totalGzipped = 0;
 
   async function processDirectory(dir: string) {
     const entries = await readdir(dir, { withFileTypes: true });
@@ -23,12 +23,9 @@ async function calculatePackageSizes(
         }
       } else if (entry.isFile()) {
         try {
-          const stats = await stat(fullPath);
-          totalSize += stats.size;
-
           const content = await readFile(fullPath);
-          const gzipped = gzipSync(content);
-          totalGzipped += gzipped.length;
+          totalSize += content.length;
+          allContent.push(content);
         } catch {
           // Skip files that can't be read
         }
@@ -37,7 +34,14 @@ async function calculatePackageSizes(
   }
 
   await processDirectory(packagePath);
-  return { size: totalSize, gzip: totalGzipped };
+
+  const concatenated = Buffer.concat(allContent);
+  const gzipped = gzipSync(concatenated);
+
+  return {
+    size: totalSize,
+    gzip: gzipped.length,
+  };
 }
 
 export async function getPackageSize(
