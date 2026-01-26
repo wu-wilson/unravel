@@ -25,11 +25,15 @@ function App() {
     }
 
     if (key.upArrow) {
-      setSelected((s) => Math.max(0, s - 1));
+      if (detailIndex === null) {
+        setSelected((s) => Math.max(0, s - 1));
+      }
     }
 
     if (key.downArrow) {
-      setSelected((s) => Math.min(data.length - 1, s + 1));
+      if (detailIndex === null) {
+        setSelected((s) => Math.min(data.length - 1, s + 1));
+      }
     }
 
     if (key.return && data[selected]) {
