@@ -1,6 +1,7 @@
 import { readdir, readFile } from "fs/promises";
 import { join, extname } from "path";
 import { ImportInfo } from "../types";
+
 const EXTENSIONS = [".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs"];
 
 export async function* walkDirectory(dir: string): AsyncGenerator<string> {
@@ -21,7 +22,14 @@ export async function* walkDirectory(dir: string): AsyncGenerator<string> {
       }
     }
   } catch (error) {
-    // Directory does not exist
+    const nodeError = error as NodeJS.ErrnoException;
+    if (nodeError.code === "ENOENT" || nodeError.code === "EACCES") {
+      return;
+    }
+
+    throw new Error(
+      `Failed to read directory ${dir}: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
 }
 

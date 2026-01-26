@@ -39,48 +39,64 @@ async function getDependencySize(
   }
 }
 
-export async function getDependencies(): Promise<DependencyInfo[]> {
+async function readPackageJson(path: string): Promise<any> {
   try {
-    const path = resolve(process.cwd(), "package.json");
     const content = await readFile(path, "utf-8");
-    const parsed = JSON.parse(content);
-
-    const dependencies = parsed.dependencies;
-    const entries = Object.entries(dependencies);
-
-    const dependenciesWithSizes = await Promise.all(
-      entries.map(async ([name, version]) => {
-        const cleanVersion = (version as string).replace(/^[\^~]/, "");
-
-        try {
-          const gzip = await getDependencySize(name, cleanVersion);
-
-          const info: DependencyInfo = {
-            name,
-            version: cleanVersion,
-            gzip,
-          };
-
-          CACHE.set(`${name}@${cleanVersion}`, info);
-          return info;
-        } catch (error) {
-          const info: DependencyInfo = {
-            name,
-            version: cleanVersion,
-            error:
-              error instanceof Error
-                ? error.message
-                : "Failed to fetch package",
-          };
-
-          CACHE.set(`${name}@${cleanVersion}`, info);
-          return info;
-        }
-      }),
-    );
-
-    return dependenciesWithSizes;
+    return JSON.parse(content);
   } catch (error) {
-    return [];
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+      throw new Error("package.json not found in the current directory");
+    }
+
+    if (error instanceof SyntaxError) {
+      throw new Error(`package.json contains invalid JSON: ${error.message}`);
+    }
+
+    throw new Error(
+      `Failed to read package.json: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
+}
+
+async function getDependencyInfo(
+  name: string,
+  version: string,
+): Promise<DependencyInfo> {
+  const cleanVersion = version.replace(/^[\^~]/, "");
+
+  try {
+    const gzip = await getDependencySize(name, cleanVersion);
+    const info: DependencyInfo = { name, version: cleanVersion, gzip };
+
+    CACHE.set(`${name}@${cleanVersion}`, info);
+    return info;
+  } catch (error) {
+    return {
+      name,
+      version: cleanVersion,
+      error:
+        error instanceof Error
+          ? error.message
+          : `Failed to fetch size for ${name}@${cleanVersion}`,
+    };
+  }
+}
+
+export async function getDependencies(): Promise<DependencyInfo[]> {
+  const path = resolve(process.cwd(), "package.json");
+
+  const packageJson = await readPackageJson(path);
+
+  const dependencies = packageJson.dependencies ?? {};
+  const entries = Object.entries(dependencies);
+
+  const dependenciesWithSizes = await Promise.all(
+    entries.map(([name, version]) =>
+      getDependencyInfo(name, version as string),
+    ),
+  );
+
+  dependenciesWithSizes.sort((a, b) => (b.gzip ?? 0) - (a.gzip ?? 0));
+
+  return dependenciesWithSizes;
 }
