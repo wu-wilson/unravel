@@ -32,11 +32,11 @@ function App() {
 
     if (key.downArrow) {
       if (detailIndex === null) {
-        setSelected((s) => Math.min(data.length - 1, s + 1));
+        setSelected((s) => Math.min(data!.length - 1, s + 1));
       }
     }
 
-    if (key.return && data[selected]) {
+    if (key.return && data![selected]) {
       setDetailIndex(selected);
     }
   });
@@ -53,9 +53,9 @@ function App() {
       {loading ? (
         <Text color="yellow">Loading dependency info...</Text>
       ) : detailIndex !== null ? (
-        <DetailView data={data[detailIndex]} />
+        <DetailView data={data![detailIndex]} />
       ) : (
-        <PackagesView data={data} selected={selected} />
+        <PackagesView data={data!} selected={selected} />
       )}
     </Box>
   );

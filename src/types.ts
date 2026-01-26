@@ -1,4 +1,4 @@
-export type PackageInfo = {
+export type DependencyInfo = {
   name: string;
   version: string;
   gzip?: number;
@@ -12,16 +12,6 @@ export type ImportInfo = {
 };
 
 export type DependencyData = {
-  package: PackageInfo;
+  dependency: DependencyInfo;
   imports: ImportInfo[];
-  dependencies: string[];
-};
-
-export type FileNode = {
-  path: string;
-  imports: string[];
-};
-
-export type CircularDependency = {
-  cycle: string[];
 };

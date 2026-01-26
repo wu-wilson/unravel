@@ -1,25 +1,25 @@
 import { Box, Text } from "ink";
 import { DependencyData } from "../../types";
-import { formatSize } from "../../utils/bundle.js";
+import { formatSize } from "../../utils/format.js";
 
 function DetailView({ data }: { data: DependencyData }) {
-  const { package: pkg, imports } = data;
+  const { dependency: dep, imports } = data;
 
   return (
     <Box flexDirection="column">
       <Box marginBottom={1}>
         <Text>
           <Text bold color="white">
-            {pkg.name}
+            {dep.name}
           </Text>
-          <Text dimColor> @{pkg.version}</Text>
+          <Text dimColor> @{dep.version}</Text>
         </Text>
       </Box>
       <Box flexDirection="column">
         <Text>
           Size (gzipped):{" "}
           <Text bold color="green">
-            {formatSize(pkg.gzip || 0)}
+            {formatSize(dep.gzip || 0)}
           </Text>
         </Text>
       </Box>

@@ -1,50 +1,23 @@
-import { useState, useEffect } from "react";
-import { DependencyData } from "../types.js";
-import { getPackages } from "../utils/packages.js";
-import { getPackageSize } from "../utils/bundle.js";
-import { scanImports } from "../utils/scanner.js";
+import { useEffect, useState } from "react";
+import { DependencyData } from "../types";
+import { getDependencies } from "../utils/dependencies.js";
+import { getImports } from "../utils/imports.js";
 
 export function useDependencyData() {
-  const [data, setData] = useState<DependencyData[]>([]);
+  const [data, setData] = useState<DependencyData[] | null>(null);
   const [loading, setLoading] = useState(true);
 
   async function load() {
-    const deps = await getPackages();
-    const entries = Object.entries(deps);
+    const data: DependencyData[] = [];
 
-    const initial: DependencyData[] = entries.map(([name, version]) => ({
-      package: {
-        name,
-        version: version.replace(/^[\^~]/, ""),
-        loading: true,
-      },
-      imports: [],
-      dependencies: [],
-    }));
+    const dependencies = await getDependencies();
 
-    setData(initial);
+    for (const dep of dependencies) {
+      const imports = await getImports(dep.name);
+      data.push({ dependency: dep, imports });
+    }
 
-    await Promise.all(
-      entries.map(async ([name, version], i) => {
-        const cleanVersion = version.replace(/^[\^~]/, "");
-
-        const [packageInfo, imports] = await Promise.all([
-          getPackageSize(name, cleanVersion),
-          scanImports(name),
-        ]);
-
-        setData((prev) => {
-          const next = [...prev];
-          next[i] = {
-            ...next[i],
-            package: packageInfo,
-            imports,
-          };
-          return next;
-        });
-      }),
-    );
-
+    setData(data);
     setLoading(false);
   }
 
