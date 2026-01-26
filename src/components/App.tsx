@@ -1,16 +1,13 @@
-import { Box, useApp, useInput } from "ink";
+import { Box, Text, useApp, useInput } from "ink";
 import { useDependencyData } from "../hooks/useDependencyData.js";
 import { useState } from "react";
-import { ViewMode } from "../types";
 import Header from "./Header.js";
 import PackagesView from "./views/PackagesView.js";
-import CircularView from "./views/CircularView.js";
 import DetailView from "./views/DetailView.js";
 
 function App() {
   const { exit } = useApp();
   const { data, loading } = useDependencyData();
-  const [mode, setMode] = useState<ViewMode>("packages");
   const [selected, setSelected] = useState(0);
   const [detailIndex, setDetailIndex] = useState<number | null>(null);
 
@@ -20,21 +17,29 @@ function App() {
       return;
     }
 
-    if (key.tab) {
-      setMode((m) => (m === "packages" ? "circular" : "packages"));
-      setSelected(0);
-      return;
-    }
-
     if (key.upArrow) {
       setSelected((s) => Math.max(0, s - 1));
     }
 
     if (key.downArrow) {
-      const maxIdx = mode === "packages" ? data.length - 1 : 0;
-      setSelected((s) => Math.min(maxIdx, s + 1));
+      setSelected((s) => Math.min(data.length - 1, s + 1));
+    }
+
+    if (key.return && data[selected]) {
+      setDetailIndex(selected);
     }
   });
+
+  if (loading) {
+    return (
+      <Box flexDirection="column" padding={1}>
+        <Header />
+        <Box marginTop={1}>
+          <Text color="yellow">⏳ Loading dependency info...</Text>
+        </Box>
+      </Box>
+    );
+  }
 
   return (
     <Box
@@ -43,17 +48,11 @@ function App() {
       borderStyle="single"
       borderColor="gray"
     >
-      <Header mode={mode} />
+      <Header />
       {detailIndex !== null ? (
         <DetailView data={data[detailIndex]} />
       ) : (
-        <>
-          {mode === "packages" ? (
-            <PackagesView data={data} selected={selected} loading={loading} />
-          ) : (
-            <CircularView selected={selected} />
-          )}
-        </>
+        <PackagesView data={data} selected={selected} />
       )}
     </Box>
   );

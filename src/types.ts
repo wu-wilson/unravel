@@ -27,5 +27,3 @@ export type FileNode = {
 export type CircularDependency = {
   cycle: string[];
 };
-
-export type ViewMode = "packages" | "circular";

@@ -1,6 +1,6 @@
 ## ⚡ Overview
 
-**Unravel** is an interactive CLI tool that untangles your project's dependencies—see bundle sizes, track imports, and detect circular references.
+**Unravel** is an interactive CLI tool that untangles your project's dependencies—see bundle sizes and track imports.
 
 ## 🎬 Video Demo
 
