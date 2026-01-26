@@ -46,7 +46,7 @@ cd example-repo
 unravel
 ```
 
-## ⚠️ Limitations
+## 🚧 Limitations
 
 - Sizes reflect gzipped npm tarballs, not the final bundle.
 - Only includes published package contents.
